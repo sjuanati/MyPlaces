@@ -22,18 +22,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Afegir Places
         
+        /*
         manager.append(Place(name: "Barcelona", description: "Best City", image_in: nil))
         manager.append(Place(name: "Paris", description: "Worst City", image_in: nil))
         manager.append(Place(name: "London", description: "Average City", image_in: nil))
         manager.append(Place(name: "Amsterdam", description: "Cool City", image_in: nil))
- 
+        */
         
-        /*
         manager.append(Place(type: .TouristicPlace, name: "Barcelona", description: "Best City", image_in: nil))
         manager.append(Place(type: .GenericPlace, name: "Paris", description: "Worst City", image_in: nil))
         manager.append(Place(type: .GenericPlace, name: "London", description: "Average City", image_in: nil))
         manager.append(Place(type: .TouristicPlace, name: "Amsterdam", description: "Cool City", image_in: nil))
-        */
+        
  
         // Comptar el número de Places
         print("Número total d'elements: ", manager.GetCount())
@@ -47,6 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Mostrar els Places
         for index in 0..<manager.GetCount() {
             print("Element \(index): Nom: ", manager.GetItemAt(position: index).name,
+                  "Tipus: ", manager.GetItemAt(position: index).type,
                   " Desc: ", manager.GetItemAt(position: index).description,
                   " ID: ", manager.GetItemAt(position: index).id)
         }

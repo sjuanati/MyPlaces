@@ -13,6 +13,7 @@ class FirstViewController: UITableViewController {
     let m_provider:ManagerPlaces = ManagerPlaces.shared()
     
     override func viewDidLoad() {
+        //TODO: comprovar que la propietat place no és null
         super.viewDidLoad()
         let view: UITableView = (self.view as? UITableView)!;
         view.delegate = self
