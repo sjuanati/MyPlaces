@@ -29,10 +29,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         manager.append(Place(name: "Amsterdam", description: "Cool City", image_in: nil))
         */
         
-        manager.append(Place(type: .TouristicPlace, name: "Barcelona", description: "Best City", image_in: nil))
-        manager.append(Place(type: .GenericPlace, name: "Paris", description: "Worst City", image_in: nil))
-        manager.append(Place(type: .GenericPlace, name: "London", description: "Average City", image_in: nil))
-        manager.append(Place(type: .TouristicPlace, name: "Amsterdam", description: "Cool City", image_in: nil))
+        manager.append(Place(type: .TouristicPlace, name: "Barcelona", description: "Best City", image_in: nil, location_in: nil))
+        manager.append(Place(type: .GenericPlace, name: "Paris", description: "Worst City", image_in: nil, location_in: nil))
+        manager.append(Place(type: .GenericPlace, name: "London", description: "Average City", image_in: nil, location_in: nil))
+        manager.append(Place(type: .TouristicPlace, name: "Amsterdam", description: "Cool City", image_in: nil, location_in: nil))
         
  
         // Comptar el número de Places

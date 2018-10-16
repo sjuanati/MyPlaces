@@ -34,13 +34,13 @@ class Place {
         self.image = image_in
     }
 
-    init(type:PlacesTypes, name:String, description:String, image_in:Data?) {
+    init(type:PlacesTypes, name:String, description:String, image_in:Data?, location_in:CLLocationCoordinate2D!) {
         self.id = UUID().uuidString
         self.type = type
-        print(type)
         self.name = name
         self.description = description
         self.image = image_in
+        self.location = location_in
     }
 
 }

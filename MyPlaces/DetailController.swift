@@ -13,6 +13,7 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
     
     // S'assigna la propietat quan és consulta i no s'assigna quan és un nou element (+)
     var place:Place? = nil
+    var pl:ManagerLocation? = nil
     
     // Propietats per al scrollView
     var keyboardHeight:CGFloat!
@@ -44,12 +45,12 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
         self.constraintHeight.constant = 400
         textName.delegate = self
         textDescription.delegate = self
+        viewPicker.delegate = self
+        viewPicker.dataSource = self
         
         if place != nil {
             textName.text = place?.name
             textDescription.text = place?.description
-            viewPicker.delegate = self
-            viewPicker.dataSource = self
             viewPicker.selectRow(place!.type.rawValue, inComponent: 0, animated: true)
         } else {
             btnUpdate.setTitle("New", for: .normal)
@@ -59,10 +60,15 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action:#selector(dismissKeyboard))
         view.addGestureRecognizer(tap)
         let notificationCenter = NotificationCenter.default
-        notificationCenter.addObserver(self, selector: #selector(hideKeyboard), name: Notification.Name.UIKeyboardWillHide, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(showKeyboard), name: Notification.Name.UIKeyboardWillShow, object: nil)
+        notificationCenter.addObserver(self,
+                                       selector: #selector(hideKeyboard),
+                                       name: Notification.Name.UIKeyboardWillHide,
+                                       object: nil)
+        notificationCenter.addObserver(self,
+                                       selector: #selector(showKeyboard),
+                                       name: Notification.Name.UIKeyboardWillShow,
+                                       object: nil)
 
-        
     }
 
     
@@ -98,19 +104,39 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
     
     
     @IBAction func Update(_ sender: UIButton) {
-    // Afegir element nou o actualitzar element existent (PLA2)
-    /*
-        if place == nil {
-            if textName.text != nil {
-                labelStatus.text = "Please insert a Name"
-            } else if textDescription.text != nil {
-                labelStatus.text = "Please insert a Description"
-            } else {
-                m_provider.append(Place(name: textName.text!, description: textDescription.text!, image_in: nil))
+    // Afegir element nou o actualitzar element existent
+
+        if textName.text != "", textDescription.text != "" {
+            let selPicker = viewPicker.selectedRow(inComponent: 0)
+            var data:Data? = nil
+            if imagePicked.image != nil {
+                data = UIImageJPEGRepresentation(imagePicked.image!, 1.0)
             }
+            if place != nil {
+                //Update element
+                m_provider.update(id: place!.id,
+                                  name: textName.text!,
+                                  description: textDescription.text!,
+                                  image_in: data,
+                                  location_in: ManagerLocation.GetLocation())
+            } else {
+                //New element
+                print(ManagerLocation.GetLocation())
+                m_provider.append(Place(type: Place.PlacesTypes.init(rawValue: selPicker)!,
+                                        name: textName.text!,
+                                        description: textDescription.text!,
+                                        image_in: data,
+                                        location_in: ManagerLocation.GetLocation()))
+            }
+            
+            let tbc:UITabBarController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
+            present(tbc, animated: true, completion: nil)
+            
         } else {
+            print("Algun es null")
+            //TODO: pop-up que ens informi que els camps són obligatoris
         }
-    */
+        
     }
     
     // *************** Protocol UIPickerViewDelegate ***************

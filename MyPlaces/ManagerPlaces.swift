@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreLocation
 
 class ManagerPlaces {
     
@@ -33,6 +34,14 @@ class ManagerPlaces {
         places.append(value)
     }
 
+    // Actualitzar un Place per ID
+    func update(id:String, name:String, description:String, image_in:Data?, location_in:CLLocationCoordinate2D!) {
+        places.first(where: {$0.id == id})?.name = name
+        places.first(where: {$0.id == id})?.description = description
+        places.first(where: {$0.id == id})?.image = nil // Out of scope PLA2
+        places.first(where: {$0.id == id})?.location = location_in // Out of scope PLA2
+    }
+    
     // Conèixer el número total de Places
     func GetCount()->Int {
         return places.count
