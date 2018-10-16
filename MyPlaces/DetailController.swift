@@ -62,11 +62,11 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self,
                                        selector: #selector(hideKeyboard),
-                                       name: Notification.Name.UIKeyboardWillHide,
+                                       name: UIResponder.keyboardWillHideNotification,
                                        object: nil)
         notificationCenter.addObserver(self,
                                        selector: #selector(showKeyboard),
-                                       name: Notification.Name.UIKeyboardWillShow,
+                                       name: UIResponder.keyboardWillShowNotification,
                                        object: nil)
 
     }
@@ -110,7 +110,7 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
             let selPicker = viewPicker.selectedRow(inComponent: 0)
             var data:Data? = nil
             if imagePicked.image != nil {
-                data = UIImageJPEGRepresentation(imagePicked.image!, 1.0)
+                data = imagePicked.image!.jpegData(compressionQuality: 1.0)
             }
             if place != nil {
                 //Update element
@@ -163,9 +163,12 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
 
     // ********** Protocol UIImagePickerControllerDelegate *********
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+// Local variable inserted by Swift 4.2 migrator.
+let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
+
         view.endEditing(true)
-        let image = info[UIImagePickerControllerOriginalImage] as! UIImage
+        let image = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)] as! UIImage
             imagePicked.contentMode = .scaleAspectFit
             imagePicked.image = image
             dismiss(animated:true, completion: nil)
@@ -212,7 +215,7 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
     @objc func showKeyboard(notification: Notification) {
         if (activeField != nil) {
             let userInfo = notification.userInfo!
-            let keyboardScreenEndFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+            let keyboardScreenEndFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
             let keyboardViewEndFrame = view.convert(keyboardScreenEndFrame, from: view.window)
             keyboardHeight = keyboardViewEndFrame.size.height
             let distanceToBottom = self.scrollView.frame.size.height - (activeField?.frame.origin.y)! - (activeField?.frame.size.height)!
@@ -255,4 +258,14 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
     
     
 
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePickerController.InfoKey) -> String {
+	return input.rawValue
 }
