@@ -8,16 +8,27 @@
 
 import UIKit
 
-class FirstViewController: UITableViewController {
-    
+// Controller de la Llista
+class FirstViewController: UITableViewController, ManagerPlacesObserver {
+  
+    func onPlacesChange() {
+        let view: UITableView = (self.view as? UITableView)!
+        view.reloadData()
+    }
+
     let m_provider:ManagerPlaces = ManagerPlaces.shared()
     
     override func viewDidLoad() {
         //TODO: comprovar que la propietat place no és null
         super.viewDidLoad()
+       
         let view: UITableView = (self.view as? UITableView)!;
         view.delegate = self
         view.dataSource = self
+        
+        // S'afegeix l'Observador (a sí mateix)
+        let manager = ManagerPlaces.shared()
+        manager.addObserver(object:self)
     }
     
     override func didReceiveMemoryWarning() {
@@ -74,8 +85,11 @@ class FirstViewController: UITableViewController {
         return cell;
     }
     
+    //TODO: És necessari??
+    /*
     func refresh(){
         self.tableView.reloadData()
     }
+     */
 }
 

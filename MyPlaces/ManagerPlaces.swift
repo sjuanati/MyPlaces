@@ -9,14 +9,16 @@
 import Foundation
 import CoreLocation
 
+protocol ManagerPlacesObserver {
+    func onPlacesChange()
+}
+
 class ManagerPlaces {
     
     var places:[Place] = []
+    // Llistat d'observadors
+    public var m_observers = Array<ManagerPlacesObserver>()
     
-    //TODO: capturar les diferents excepcions
-    enum PlacesError: Error {
-        case OutofRange
-    }
     
     // Singleton: única instància per tota l'app
     private static var sharedManagerPlaces: ManagerPlaces = {
@@ -38,7 +40,7 @@ class ManagerPlaces {
     func update(id:String, name:String, description:String, image_in:Data?, location_in:CLLocationCoordinate2D!) {
         places.first(where: {$0.id == id})?.name = name
         places.first(where: {$0.id == id})?.description = description
-        places.first(where: {$0.id == id})?.image = nil // Out of scope PLA2
+        places.first(where: {$0.id == id})?.image = image_in // Out of scope PLA2
         places.first(where: {$0.id == id})?.location = location_in // Out of scope PLA2
     }
     
@@ -61,5 +63,23 @@ class ManagerPlaces {
     func remove(id:String) {
         places = places.filter({$0.id != id})
     }
+
+    // Afegir un element a la llista m_observers
+    public func addObserver(object:ManagerPlacesObserver) {
+        m_observers.append(object)
+    }
+    
+    // Executar a cada observer de la llista el mètode onPlacesChange.
+    public func UpdateObservers() {
+        let numObservers = m_observers.count
+        if numObservers > 0 {
+            for i in 0..<numObservers {
+                m_observers[i].onPlacesChange()
+            }
+        }
+    }
     
 }
+
+
+

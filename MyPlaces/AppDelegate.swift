@@ -17,10 +17,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
 
         let manager = ManagerPlaces.shared()
-
-        print("*** Inici resultats PAC1")
         
-        // Afegir Places
+        // Afegir Places d'exemple
         
         /*
         manager.append(Place(name: "Barcelona", description: "Best City", image_in: nil))
@@ -29,30 +27,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         manager.append(Place(name: "Amsterdam", description: "Cool City", image_in: nil))
         */
         
-        manager.append(Place(type: .TouristicPlace, name: "Barcelona", description: "Best City", image_in: nil, location_in: nil))
-        manager.append(Place(type: .GenericPlace, name: "Paris", description: "Worst City", image_in: nil, location_in: nil))
-        manager.append(Place(type: .GenericPlace, name: "London", description: "Average City", image_in: nil, location_in: nil))
-        manager.append(Place(type: .TouristicPlace, name: "Amsterdam", description: "Cool City", image_in: nil, location_in: nil))
-        
- 
-        // Comptar el número de Places
-        print("Número total d'elements: ", manager.GetCount())
-        
-        // Buscar un Place per posició (i guardar el seu ID)
-        //let idProva  = manager.GetItemAt(position: 1).id
-
-        // Eliminar un Place per ID
-        //manager.remove(id: idProva)
-
-        // Mostrar els Places
-        for index in 0..<manager.GetCount() {
-            print("Element \(index): Nom: ", manager.GetItemAt(position: index).name,
-                  "Tipus: ", manager.GetItemAt(position: index).type,
-                  " Desc: ", manager.GetItemAt(position: index).description,
-                  " ID: ", manager.GetItemAt(position: index).id)
-        }
-        
-        print("*** Fi de resultats PAC1")
+        manager.append(Place(type: .TouristicPlace, name: "Barcelona", description: "Best City", image_in: nil, location_in: ManagerLocation.GetLocation()))
+        manager.append(Place(type: .GenericPlace, name: "Paris", description: "Worst City", image_in: nil, location_in: ManagerLocation.GetLocation()))
+        manager.append(Place(type: .GenericPlace, name: "London", description: "Average City", image_in: nil, location_in: ManagerLocation.GetLocation()))
+        manager.append(Place(type: .TouristicPlace, name: "Amsterdam", description: "", image_in: nil, location_in: ManagerLocation.GetLocation()))
         
         return true
     }

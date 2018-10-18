@@ -52,6 +52,7 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
             textName.text = place?.name
             textDescription.text = place?.description
             viewPicker.selectRow(place!.type.rawValue, inComponent: 0, animated: true)
+            if place?.image != nil { imagePicked.image = UIImage(data: (place?.image)!) }
         } else {
             btnUpdate.setTitle("New", for: .normal)
         }
@@ -96,10 +97,18 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
     // Eliminar element de la llista, excepte quan estem creant un nou element
         if place != nil {
             m_provider.remove(id: place!.id)
-            let tbc:UITabBarController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
-            present(tbc, animated: true, completion: nil)
+
+        /*  // Això actualitzava automàticament la llista. Està anul·lat per comprovar que els observers són els que actualitzen la llista
+            let fvc:FirstViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "FirstViewController") as! FirstViewController
+            present(fvc, animated: true, completion: nil)
+        */
+
+            let manager = ManagerPlaces.shared()
+            manager.UpdateObservers()
+            
+            dismiss(animated: true, completion: nil)
         }
-        //TODO: botó remove en gris quan estiguem afegint nou element
+        //TODO nice-to-have: botó remove en gris quan estiguem afegint nou element?
     }
     
     
@@ -129,12 +138,13 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
                                         location_in: ManagerLocation.GetLocation()))
             }
             
-            let tbc:UITabBarController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
-            present(tbc, animated: true, completion: nil)
+            let manager = ManagerPlaces.shared()
+            manager.UpdateObservers()
             
+            dismiss(animated: true, completion: nil)
+
         } else {
-            print("Algun es null")
-            //TODO: pop-up que ens informi que els camps són obligatoris
+            //TODO: pop-up que ens informi que algun dels camps obligatoris no està informat
         }
         
     }
@@ -164,15 +174,31 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
     // ********** Protocol UIImagePickerControllerDelegate *********
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-// Local variable inserted by Swift 4.2 migrator.
-let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
-
+            
+        // Local variable inserted by Swift 4.2 migrator.
+        let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
         view.endEditing(true)
         let image = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)] as! UIImage
             imagePicked.contentMode = .scaleAspectFit
             imagePicked.image = image
             dismiss(animated:true, completion: nil)
     }
+ 
+    
+    /*
+    private func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+            
+        view.endEditing(true)
+        let image = info[UIImagePickerController.InfoKey.originalImage]! as! UIImage
+        imagePicked.contentMode = .scaleAspectFit
+        imagePicked.image = image
+        dismiss(animated:true, completion: nil)
+    }
+    */
+    
+    
+    
+    
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated:true, completion: nil)
@@ -245,19 +271,12 @@ let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
         keyboardHeight = nil
     }
     
-    
-    
-    
-    
+
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
     }
-
-    
-    
-
 }
 
 // Helper function inserted by Swift 4.2 migrator.
