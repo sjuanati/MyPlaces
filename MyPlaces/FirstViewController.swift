@@ -85,11 +85,5 @@ class FirstViewController: UITableViewController, ManagerPlacesObserver {
         return cell;
     }
     
-    //TODO: És necessari??
-    /*
-    func refresh(){
-        self.tableView.reloadData()
-    }
-     */
 }
 

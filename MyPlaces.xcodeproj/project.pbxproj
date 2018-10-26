@@ -19,6 +19,7 @@
 		0757100321541A9700909E8F /* PlaceTourist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0757100221541A9700909E8F /* PlaceTourist.swift */; };
 		0757100521541C7100909E8F /* ManagerPlaces.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0757100421541C7100909E8F /* ManagerPlaces.swift */; };
 		0782527921710A1000B3E4E4 /* ManagerLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0782527821710A1000B3E4E4 /* ManagerLocation.swift */; };
+		07860EAF217A09270091FF93 /* FileSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07860EAE217A09270091FF93 /* FileSystem.swift */; };
 		07DF3408215F431900FD931E /* placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 07DF3407215F431900FD931E /* placeholder.png */; };
 		07DF340A21613DDA00FD931E /* back.png in Resources */ = {isa = PBXBuildFile; fileRef = 07DF340921613DDA00FD931E /* back.png */; };
 		07DF340C21613DE200FD931E /* edit.png in Resources */ = {isa = PBXBuildFile; fileRef = 07DF340B21613DE200FD931E /* edit.png */; };
@@ -41,6 +42,7 @@
 		0757100221541A9700909E8F /* PlaceTourist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceTourist.swift; sourceTree = "<group>"; };
 		0757100421541C7100909E8F /* ManagerPlaces.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerPlaces.swift; sourceTree = "<group>"; };
 		0782527821710A1000B3E4E4 /* ManagerLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagerLocation.swift; sourceTree = "<group>"; };
+		07860EAE217A09270091FF93 /* FileSystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystem.swift; sourceTree = "<group>"; };
 		07DF3407215F431900FD931E /* placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = placeholder.png; sourceTree = "<group>"; };
 		07DF340921613DDA00FD931E /* back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = back.png; sourceTree = "<group>"; };
 		07DF340B21613DE200FD931E /* edit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = edit.png; sourceTree = "<group>"; };
@@ -92,6 +94,7 @@
 				075710002154112E00909E8F /* Place.swift */,
 				0757100221541A9700909E8F /* PlaceTourist.swift */,
 				0757100421541C7100909E8F /* ManagerPlaces.swift */,
+				07860EAE217A09270091FF93 /* FileSystem.swift */,
 				0782527821710A1000B3E4E4 /* ManagerLocation.swift */,
 			);
 			path = MyPlaces;
@@ -200,6 +203,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0757100321541A9700909E8F /* PlaceTourist.swift in Sources */,
+				07860EAF217A09270091FF93 /* FileSystem.swift in Sources */,
 				075158082153A42C00D3435D /* DetailController.swift in Sources */,
 				075157F82153A00600D3435D /* SecondViewController.swift in Sources */,
 				075157F42153A00600D3435D /* AppDelegate.swift in Sources */,

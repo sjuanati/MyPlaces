@@ -9,7 +9,7 @@
 import Foundation
 import MapKit
 
-class Place {
+class Place : Codable {
 
     enum PlacesTypes: Int, Codable {
         case GenericPlace
@@ -43,4 +43,43 @@ class Place {
         self.location = location_in
     }
 
+    // Serialització d'un Place
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case description
+        case name
+        case type
+        case latitude
+        case longitude
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(type, forKey: .type)
+        try container.encode(name, forKey: .name)
+        try container.encode(description, forKey: .description)
+        try container.encode(location.latitude, forKey: .latitude)
+        try container.encode(location.longitude, forKey: .longitude)
+    }
+    
+    // Deserialització d'un Place
+    
+    func decode(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        id = try container.decode(String.self, forKey: .id)
+        type = try container.decode(PlacesTypes.self, forKey: .type)
+        name = try container.decode(String.self, forKey: .name)
+        description = try container.decode(String.self, forKey: .description)
+        let latitude = try container.decode(Double.self, forKey: .latitude)
+        let longitude = try container.decode(Double.self, forKey: .longitude)
+        location = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+    
+    required convenience init(from decoder: Decoder) throws {
+        self.init()
+        try decode(from: decoder) }
+    
 }

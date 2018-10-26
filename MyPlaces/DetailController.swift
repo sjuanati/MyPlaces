@@ -52,7 +52,20 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
             textName.text = place?.name
             textDescription.text = place?.description
             viewPicker.selectRow(place!.type.rawValue, inComponent: 0, animated: true)
-            if place?.image != nil { imagePicked.image = UIImage(data: (place?.image)!) }
+            
+            /* // OK quan NO es llegia des de fitxer
+            if place?.image != nil {
+                imagePicked.image = UIImage(data: (place?.image)!)
+            } */
+            
+            let pathImage = m_provider.GetPathImage(p: place!)
+            do {
+                let imageData = try Data(contentsOf: URL(fileURLWithPath: pathImage))
+                imagePicked.image = UIImage(data: imageData)
+            } catch {
+                // TODO: Error handling
+            }
+            
         } else {
             btnUpdate.setTitle("New", for: .normal)
         }
@@ -79,7 +92,7 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
     
     
     @IBAction func selectImage(_ sender: UIButton) {
-        var imagePicker = UIImagePickerController()
+        let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
         imagePicker.sourceType = .photoLibrary;
         imagePicker.allowsEditing = false
@@ -98,11 +111,9 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
         if place != nil {
             m_provider.remove(id: place!.id)
 
-        /*  // Això actualitzava automàticament la llista. Està anul·lat per comprovar que els observers són els que actualitzen la llista
-            let fvc:FirstViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "FirstViewController") as! FirstViewController
-            present(fvc, animated: true, completion: nil)
-        */
-
+            // Save list into file
+            m_provider.store()
+            
             let manager = ManagerPlaces.shared()
             manager.UpdateObservers()
             
@@ -115,7 +126,7 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
     @IBAction func Update(_ sender: UIButton) {
     // Afegir element nou o actualitzar element existent
 
-        if textName.text != "", textDescription.text != "" {
+        if textName.text != "" {
             let selPicker = viewPicker.selectedRow(inComponent: 0)
             var data:Data? = nil
             if imagePicked.image != nil {
@@ -130,7 +141,6 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
                                   location_in: ManagerLocation.GetLocation())
             } else {
                 //New element
-                print(ManagerLocation.GetLocation())
                 m_provider.append(Place(type: Place.PlacesTypes.init(rawValue: selPicker)!,
                                         name: textName.text!,
                                         description: textDescription.text!,
@@ -138,8 +148,12 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
                                         location_in: ManagerLocation.GetLocation()))
             }
             
+            // Update Observer
             let manager = ManagerPlaces.shared()
             manager.UpdateObservers()
+            
+            // Save list into file
+            m_provider.store()
             
             dismiss(animated: true, completion: nil)
 
@@ -185,21 +199,6 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
     }
  
     
-    /*
-    private func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
-            
-        view.endEditing(true)
-        let image = info[UIImagePickerController.InfoKey.originalImage]! as! UIImage
-        imagePicked.contentMode = .scaleAspectFit
-        imagePicked.image = image
-        dismiss(animated:true, completion: nil)
-    }
-    */
-    
-    
-    
-    
-    
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated:true, completion: nil)
     }
@@ -208,29 +207,32 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
     
     // Per saber quin UITextView volem editar:
     
-    @objc func textViewShouldBeginEditing(_ textView: UITextView) {
+    @objc func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         activeField = textView
         lastOffset = self.scrollView.contentOffset
+        return true
     }
 
-    @objc func textViewShouldEndEditing(_ textView: UITextView) {
+    @objc func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
         if (activeField==textView) {
             activeField?.resignFirstResponder()
             activeField = nil
         }
+        return true
     }
 
-    @objc func textFieldShouldBeginEditing(_ textField: UITextView) -> Bool {
+    @objc func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         activeField = textField
         lastOffset = self.scrollView.contentOffset
         return true
     }
 
-    @objc func textFieldShouldEndEditing(_ textField: UITextView) {
+    @objc func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
         if (activeField == textField) {
             activeField?.resignFirstResponder()
             activeField = nil
         }
+        return true
     }
     
     // *************************************************************

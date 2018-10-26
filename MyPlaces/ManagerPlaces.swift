@@ -13,18 +13,31 @@ protocol ManagerPlacesObserver {
     func onPlacesChange()
 }
 
-class ManagerPlaces {
+class ManagerPlaces : Codable {
     
     var places:[Place] = []
+    
     // Llistat d'observadors
     public var m_observers = Array<ManagerPlacesObserver>()
     
+    // Serialització
+    enum CodingKeys: String, CodingKey {
+        case places
+        //TODO ?
+    }
+    enum PlacesTypeKey: CodingKey {
+        case type
+        //TODO ?
+    }
     
     // Singleton: única instància per tota l'app
     private static var sharedManagerPlaces: ManagerPlaces = {
-        var singletonManager:ManagerPlaces
-        singletonManager = ManagerPlaces()
-        return singletonManager
+        var singletonManager:ManagerPlaces?
+        singletonManager = load() //JSON
+        if (singletonManager == nil) {
+            singletonManager = ManagerPlaces()
+        }
+        return singletonManager!
     } ()
 
     class func shared() -> ManagerPlaces {
@@ -78,6 +91,82 @@ class ManagerPlaces {
             }
         }
     }
+
+    // Obtenir el path de la imatge guardada del Place via ID
+    func GetPathImage(p:Place) -> String {
+        let r = FileSystem.GetPathImage(id: p.id)
+        return r
+    }
+ 
+    // Serialització d'un ManagerPlaces
+    
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy:CodingKeys.self)
+        try container.encode(places, forKey: .places)
+    }
+
+    func store() {
+        do {
+            let encoder = JSONEncoder()
+            let data = try encoder.encode(self)
+            for place in places {
+                if (place.image != nil) {
+                    FileSystem.WriteData(id:place.id,image:place.image!)  // write image
+                    place.image = nil;
+                }
+            }
+            FileSystem.Write(data: String(data: data, encoding: .utf8)!)  // write text
+        }
+        catch
+        {
+        }
+
+    }
+    
+    // Deserialització del ManagerPlaces
+    
+    func decode(from decoder: Decoder) throws {
+        
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        places = [Place]()
+        var objectsArrayForType = try container.nestedUnkeyedContainer(forKey: CodingKeys.places)
+        var tmp_array = objectsArrayForType
+        
+        while(!objectsArrayForType.isAtEnd) {
+            
+            let object = try objectsArrayForType.nestedContainer(keyedBy: PlacesTypeKey.self)
+            let type = try object.decode(Place.PlacesTypes.self, forKey: PlacesTypeKey.type)
+            
+            switch type {
+                case Place.PlacesTypes.TouristicPlace:
+                    self.append(try tmp_array.decode(PlaceTourist.self))
+                default:
+                    self.append(try tmp_array.decode(Place.self)) }
+        }
+    }
+
+    // Deserialització d'arrays de diferents elements
+    
+    static func load() -> ManagerPlaces? {
+        
+        var resul:ManagerPlaces? = nil
+        let data_str = FileSystem.Read()
+        
+        if (data_str != "") {
+            do {
+                let decoder = JSONDecoder()
+                let data:Data = Data(data_str.utf8)
+                resul = try decoder.decode(ManagerPlaces.self,from: data)
+            }
+            catch
+            {
+                resul = nil
+            }
+        }
+        return resul
+    }
+    
     
 }
 
