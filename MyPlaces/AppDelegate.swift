@@ -15,21 +15,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-
- //       let manager = ManagerPlaces.shared()
-        
-        // Afegir Places d'exemple
-        
- 
 /*
-        manager.append(Place(type: .TouristicPlace, name: "Barcelona", description: "Best City", image_in: nil, location_in: ManagerLocation.GetLocation()))
-        manager.append(Place(type: .GenericPlace, name: "Paris", description: "Worst City", image_in: nil, location_in: ManagerLocation.GetLocation()))
-        manager.append(Place(type: .GenericPlace, name: "London", description: "Average City", image_in: nil, location_in: ManagerLocation.GetLocation()))
-        manager.append(Place(type: .TouristicPlace, name: "Amsterdam", description: "", image_in: nil, location_in: ManagerLocation.GetLocation()))
+        // PLA1 - Afegir Places d'exemple
 
+        let manager = ManagerPlaces.shared()
+        
+        manager.append(Place(type: .TouristicPlace,
+                        name: "Barcelona",
+                        description: "Best City",
+                        image_in: nil,
+                        location_in: ManagerLocation.GetLocation()))
+        manager.append(Place(type: .GenericPlace,
+                        name: "Paris",
+                        description: "Worst City",
+                        image_in: nil,
+                        location_in: ManagerLocation.GetLocation()))
+        manager.append(Place(type: .GenericPlace,
+                        name: "London",
+                        description: "Average City",
+                        image_in: nil,
+                        location_in: ManagerLocation.GetLocation()))
+        manager.append(Place(type: .TouristicPlace,
+                        name: "Amsterdam",
+                        description: "",
+                        image_in: nil,
+                        location_in: ManagerLocation.GetLocation()))
         manager.store()
  */
- 
  
         return true
     }

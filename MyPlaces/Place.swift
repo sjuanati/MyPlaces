@@ -43,7 +43,7 @@ class Place : Codable {
         self.location = location_in
     }
 
-    // Serialització d'un Place
+    // Place Serialization
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -64,7 +64,7 @@ class Place : Codable {
         try container.encode(location.longitude, forKey: .longitude)
     }
     
-    // Deserialització d'un Place
+    // Place Deserialization
     
     func decode(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)

@@ -17,20 +17,18 @@ class ManagerPlaces : Codable {
     
     var places:[Place] = []
     
-    // Llistat d'observadors
+    // Observers list
     public var m_observers = Array<ManagerPlacesObserver>()
     
-    // Serialització
+    // Serialization
     enum CodingKeys: String, CodingKey {
         case places
-        //TODO ?
     }
     enum PlacesTypeKey: CodingKey {
         case type
-        //TODO ?
     }
     
-    // Singleton: única instància per tota l'app
+    // Singleton: unique instance for the whole app
     private static var sharedManagerPlaces: ManagerPlaces = {
         var singletonManager:ManagerPlaces?
         singletonManager = load() //JSON
@@ -40,16 +38,19 @@ class ManagerPlaces : Codable {
         return singletonManager!
     } ()
 
+    
     class func shared() -> ManagerPlaces {
         return sharedManagerPlaces
     }
     
-    // Afegir un Place
+    
+    // Add a Place
     func append(_ value:Place) {
         places.append(value)
     }
 
-    // Actualitzar un Place per ID
+    
+    // Update a Place by ID
     func update(id:String, name:String, description:String, image_in:Data?, location_in:CLLocationCoordinate2D!) {
         places.first(where: {$0.id == id})?.name = name
         places.first(where: {$0.id == id})?.description = description
@@ -57,32 +58,49 @@ class ManagerPlaces : Codable {
         places.first(where: {$0.id == id})?.location = location_in // Out of scope PLA2
     }
     
-    // Conèixer el número total de Places
-    func GetCount()->Int {
+    
+    // Get total number of Places
+    func GetCount() -> Int {
         return places.count
     }
     
-    // Obtenir un Place per posició **COMPTE! peta si s'accedeix i no queden elements a la llista
-    func GetItemAt(position:Int)->Place {
+    
+    // Get a Place by position
+    // TODO Fails if called and there are no Places
+    func GetItemAt(position:Int) -> Place {
         return places[position]
     }
     
-    // Obtenir un Place per ID
-    func GetItemById(id:String)->Place {
+    
+    // Get a Place by ID
+    func GetItemById(id:String) -> Place {
         return places.filter({$0.id.elementsEqual(id)})[0]
     }
     
-    // Esborrar un element per id
+    
+    // Remove a place by ID
     func remove(id:String) {
         places = places.filter({$0.id != id})
     }
 
-    // Afegir un element a la llista m_observers
+    
+    // Check if a place name already exists (case sensitive)
+    func checkRepeated(nameRepe:String) -> Bool {
+        if places.contains(where: {$0.name.compare(nameRepe, options: .caseInsensitive) == .orderedSame}) {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    
+    // Add an object into the observers' list
     public func addObserver(object:ManagerPlacesObserver) {
         m_observers.append(object)
     }
     
-    // Executar a cada observer de la llista el mètode onPlacesChange.
+    
+    // Call onPlacesChange() for every object within the observers' list
     public func UpdateObservers() {
         let numObservers = m_observers.count
         if numObservers > 0 {
@@ -92,13 +110,15 @@ class ManagerPlaces : Codable {
         }
     }
 
-    // Obtenir el path de la imatge guardada del Place via ID
+    
+    // Get path from place image by ID
     func GetPathImage(p:Place) -> String {
         let r = FileSystem.GetPathImage(id: p.id)
         return r
     }
  
-    // Serialització d'un ManagerPlaces
+    
+    // ************* ManagerPlaces Serialization *************
     
 
     func encode(to encoder: Encoder) throws {
@@ -106,6 +126,7 @@ class ManagerPlaces : Codable {
         try container.encode(places, forKey: .places)
     }
 
+    
     func store() {
         do {
             let encoder = JSONEncoder()
@@ -124,7 +145,8 @@ class ManagerPlaces : Codable {
 
     }
     
-    // Deserialització del ManagerPlaces
+    
+    //  ************* ManagerPlaces Deserialization *************
     
     func decode(from decoder: Decoder) throws {
         
@@ -146,7 +168,8 @@ class ManagerPlaces : Codable {
         }
     }
 
-    // Deserialització d'arrays de diferents elements
+    
+    // ************* Different Array types Deserialization *************
     
     static func load() -> ManagerPlaces? {
         

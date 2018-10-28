@@ -19,14 +19,14 @@ class FirstViewController: UITableViewController, ManagerPlacesObserver {
     let m_provider:ManagerPlaces = ManagerPlaces.shared()
     
     override func viewDidLoad() {
-        //TODO: comprovar que la propietat place no és null
+
         super.viewDidLoad()
        
         let view: UITableView = (self.view as? UITableView)!;
         view.delegate = self
         view.dataSource = self
         
-        // S'afegeix l'Observador (a sí mateix)
+        // Add self observer
         let manager = ManagerPlaces.shared()
         manager.addObserver(object:self)
     }
@@ -35,20 +35,20 @@ class FirstViewController: UITableViewController, ManagerPlacesObserver {
         super.didReceiveMemoryWarning()
     }
 
-    // **** Implementació del protocol Table *****
+    // *************** Protocol Table ***************
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    // Número d'elements guardats a Places
+    // Number of elements in Places
         return m_provider.GetCount()
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-    // Indicar sub-seccions de la llista. Retornarem 1 pq no hi ha sub-seccions.
+    // Number of sub-sections in tableView
         return 1;
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    // Detectar pulsació en un element.
+    // Detect click on one Place within the tableview
         let dc:DetailController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "DetailController") as! DetailController
         let place: Place = self.m_provider.GetItemAt(position: indexPath.row)
         dc.place = place
@@ -56,28 +56,27 @@ class FirstViewController: UITableViewController, ManagerPlacesObserver {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    // Retornar l'altura de la fila situada en una posició determinada.
+    // Height of a row at a given position
         return 80;
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // Retornar una instància de la classe UITableViewCell que pinti la fila seleccionada.
+        // Instance of class UITableViewCell to fulfill the selected row
 
         var cell: UITableViewCell
         cell = UITableViewCell()
         let wt: CGFloat = tableView.bounds.size.width
         
-        // Afegir nom de l'element a la cel·la
+        // Add place name
         var label: UILabel
         label = UILabel(frame: CGRect(x:10,y:10,width:wt,height:40))
         let font: UIFont = UIFont(name: "Arial", size: 18)!
         label.font = font
-        //label.numberOfLines = 4
         label.text = m_provider.GetItemAt(position: indexPath.row).name
         label.sizeToFit()
         cell.contentView.addSubview(label)
         
-        // Afegir icones a l'element de la cel·la
+        // Add place icon
         let imageIcon: UIImageView = UIImageView(image: UIImage(named:"placeholder.png"))
         imageIcon.frame = CGRect(x:10, y:35, width:25, height:25)
         cell.contentView.addSubview(imageIcon)

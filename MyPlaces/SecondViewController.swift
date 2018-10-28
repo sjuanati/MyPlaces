@@ -8,7 +8,7 @@
 
 import UIKit
 
-// Controller del Mapa
+// Map controller
 class SecondViewController: UIViewController {
 
     override func viewDidLoad() {

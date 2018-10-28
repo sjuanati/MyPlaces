@@ -27,7 +27,7 @@ class PlaceTourist: Place {
         self.discount_tourist = discount_tourist
     }
 
-    // Serialització d'un PlaceTourist
+    // PlaceTourist Serialization
     
     override func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeysTourist.self)
@@ -35,7 +35,7 @@ class PlaceTourist: Place {
         try super.encode(to: encoder)
     }
     
-    // Deserialització d'un PlaceTourist
+    // PlaceTourist Deserialization
     
     override func decode(from decoder: Decoder) throws {
         try super.decode(from:decoder)

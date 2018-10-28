@@ -11,18 +11,18 @@ import UIKit
 
 class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, UITextFieldDelegate {
     
-    // S'assigna la propietat quan és consulta i no s'assigna quan és un nou element (+)
+    // Places instance
     var place:Place? = nil
     var pl:ManagerLocation? = nil
+    let m_provider:ManagerPlaces = ManagerPlaces.shared()
     
-    // Propietats per al scrollView
+    // scrollView properties
     var keyboardHeight:CGFloat!
     var activeField: UIView!
     var lastOffset:CGPoint!
     
-    // Instància de tots els valors per poder eliminar el que hem seleccionat
-    let m_provider:ManagerPlaces = ManagerPlaces.shared()
-
+    
+    // viewPicker values
     let pickerElems1 = ["Generic place", "Touristic place"]
     
     @IBOutlet weak var viewPicker: UIPickerView!
@@ -53,7 +53,8 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
             textDescription.text = place?.description
             viewPicker.selectRow(place!.type.rawValue, inComponent: 0, animated: true)
             
-            /* // OK quan NO es llegia des de fitxer
+            // PLA1 - OK quan NO es llegia des de fitxer
+            /*
             if place?.image != nil {
                 imagePicked.image = UIImage(data: (place?.image)!)
             } */
@@ -65,7 +66,6 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
             } catch {
                 // TODO: Error handling
             }
-            
         } else {
             btnUpdate.setTitle("New", for: .normal)
         }
@@ -82,7 +82,6 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
                                        selector: #selector(showKeyboard),
                                        name: UIResponder.keyboardWillShowNotification,
                                        object: nil)
-
     }
 
     
@@ -92,6 +91,7 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
     
     
     @IBAction func selectImage(_ sender: UIButton) {
+    // Select image from library
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
         imagePicker.sourceType = .photoLibrary;
@@ -101,17 +101,15 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
     
     
     @IBAction func Close(_ sender: Any) {
-    // Tornar enrera (a FirstViewController)
+    // Go back (to FirstViewController)
         dismiss(animated: true, completion: nil)
     }
 
     
     @IBAction func Remove(_ sender: UIButton) {
-    // Eliminar element de la llista, excepte quan estem creant un nou element
+    // Remove element from list, except when creating a new element
         if place != nil {
             m_provider.remove(id: place!.id)
-
-            // Save list into file
             m_provider.store()
             
             let manager = ManagerPlaces.shared()
@@ -119,19 +117,27 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
             
             dismiss(animated: true, completion: nil)
         }
-        //TODO nice-to-have: botó remove en gris quan estiguem afegint nou element?
     }
     
     
     @IBAction func Update(_ sender: UIButton) {
-    // Afegir element nou o actualitzar element existent
-
+    // Add new element or update existing one
         if textName.text != "" {
             let selPicker = viewPicker.selectedRow(inComponent: 0)
             var data:Data? = nil
+            
             if imagePicked.image != nil {
                 data = imagePicked.image!.jpegData(compressionQuality: 1.0)
             }
+        
+            //Check repeated Name (either New or Update)
+            if m_provider.checkRepeated(nameRepe: textName.text!) == true, place == nil || place?.name != textName.text! {
+                let alert = UIAlertController(title: "Alert",
+                                              message: "Place <" + textName.text! + "> already exists.",
+                                              preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            } else {
             if place != nil {
                 //Update element
                 m_provider.update(id: place!.id,
@@ -141,26 +147,33 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
                                   location_in: ManagerLocation.GetLocation())
             } else {
                 //New element
-                m_provider.append(Place(type: Place.PlacesTypes.init(rawValue: selPicker)!,
-                                        name: textName.text!,
-                                        description: textDescription.text!,
-                                        image_in: data,
-                                        location_in: ManagerLocation.GetLocation()))
+                switch (pickerElems1[viewPicker.selectedRow(inComponent: 0)]) {
+                case "Touristic place":
+                    m_provider.append(PlaceTourist(name: textName.text!,
+                                                    description: textDescription.text!,
+                                                    discount_tourist: "10?", //TODO PLA3
+                                                    image_in: data,
+                                                    location_in: ManagerLocation.GetLocation()))
+                    default:
+                    m_provider.append(Place(type: Place.PlacesTypes.init(rawValue: selPicker)!,
+                                            name: textName.text!,
+                                            description: textDescription.text!,
+                                            image_in: data,
+                                            location_in: ManagerLocation.GetLocation()))
+                    }
+                }
+                
+                // Update Observer
+                let manager = ManagerPlaces.shared()
+                manager.UpdateObservers()
+                
+                // Save list into file
+                m_provider.store()
+                
+                dismiss(animated: true, completion: nil)
             }
-            
-            // Update Observer
-            let manager = ManagerPlaces.shared()
-            manager.UpdateObservers()
-            
-            // Save list into file
-            m_provider.store()
-            
-            dismiss(animated: true, completion: nil)
-
-        } else {
-            //TODO: pop-up que ens informi que algun dels camps obligatoris no està informat
         }
-        
+
     }
     
     // *************** Protocol UIPickerViewDelegate ***************
@@ -205,7 +218,7 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
     
     // *************************************************************
     
-    // Per saber quin UITextView volem editar:
+    // Determine which UITextView is to be edited
     
     @objc func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         activeField = textView
@@ -237,7 +250,7 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
     
     // *************************************************************
     
-    // Al mostrar el teclat reposicionem la UIScrollView
+    // UIScrollView is repositioned when showing the keyboard
     
     
     @objc func showKeyboard(notification: Notification) {
@@ -256,14 +269,14 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
             }
     }
     
-    // Al pitjar fora del UITextView es tanca el teclat (Hide soft keyboard):
+    // Hide keyboard when clicking out of UITextView:
 
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
     
   
-    // Al tancar-se el teclat reposicionem la UIScrollView:
+    // UIScrollView is repositioned when closing the keyboard
     
     @objc func hideKeyboard(notification: Notification) {
         if(keyboardHeight != nil) {
