@@ -11,10 +11,11 @@ import UIKit
 
 class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, UITextFieldDelegate {
     
-    // Places instance
+    // Places & Location instances
     var place:Place? = nil
     var pl:ManagerLocation? = nil
     let m_provider:ManagerPlaces = ManagerPlaces.shared()
+    let m_location_manager:ManagerLocation = ManagerLocation.shared()
     
     // scrollView properties
     var keyboardHeight:CGFloat!
@@ -144,7 +145,7 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
                                   name: textName.text!,
                                   description: textDescription.text!,
                                   image_in: data,
-                                  location_in: ManagerLocation.GetLocation())
+                                  location_in: m_location_manager.GetLocation())
             } else {
                 //New element
                 switch (pickerElems1[viewPicker.selectedRow(inComponent: 0)]) {
@@ -153,13 +154,13 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
                                                     description: textDescription.text!,
                                                     discount_tourist: "10?", //TODO PLA3
                                                     image_in: data,
-                                                    location_in: ManagerLocation.GetLocation()))
+                                                    location_in: m_location_manager.GetLocation()))
                     default:
                     m_provider.append(Place(type: Place.PlacesTypes.init(rawValue: selPicker)!,
                                             name: textName.text!,
                                             description: textDescription.text!,
                                             image_in: data,
-                                            location_in: ManagerLocation.GetLocation()))
+                                            location_in: m_location_manager.GetLocation()))
                     }
                 }
                 

@@ -17,6 +17,7 @@ class FirstViewController: UITableViewController, ManagerPlacesObserver {
     }
 
     let m_provider:ManagerPlaces = ManagerPlaces.shared()
+    let m_location_manager:ManagerLocation = ManagerLocation.shared()
     
     override func viewDidLoad() {
 

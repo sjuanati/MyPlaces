@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		071B49C9218A25DE0072F109 /* MKMyPointAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 071B49C8218A25DE0072F109 /* MKMyPointAnnotation.swift */; };
 		075157F42153A00600D3435D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 075157F32153A00600D3435D /* AppDelegate.swift */; };
 		075157F62153A00600D3435D /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 075157F52153A00600D3435D /* FirstViewController.swift */; };
 		075157F82153A00600D3435D /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 075157F72153A00600D3435D /* SecondViewController.swift */; };
@@ -28,6 +29,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		071B49C8218A25DE0072F109 /* MKMyPointAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKMyPointAnnotation.swift; sourceTree = "<group>"; };
 		075157F02153A00600D3435D /* MyPlaces.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyPlaces.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		075157F32153A00600D3435D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		075157F52153A00600D3435D /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
@@ -91,11 +93,12 @@
 				075157FE2153A00700D3435D /* LaunchScreen.storyboard */,
 				075158012153A00700D3435D /* Info.plist */,
 				075158072153A42C00D3435D /* DetailController.swift */,
+				071B49C8218A25DE0072F109 /* MKMyPointAnnotation.swift */,
 				075710002154112E00909E8F /* Place.swift */,
 				0757100221541A9700909E8F /* PlaceTourist.swift */,
 				0757100421541C7100909E8F /* ManagerPlaces.swift */,
-				07860EAE217A09270091FF93 /* FileSystem.swift */,
 				0782527821710A1000B3E4E4 /* ManagerLocation.swift */,
+				07860EAE217A09270091FF93 /* FileSystem.swift */,
 			);
 			path = MyPlaces;
 			sourceTree = "<group>";
@@ -154,6 +157,9 @@
 						CreatedOnToolsVersion = 9.4.1;
 						LastSwiftMigration = 1000;
 						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
 							com.apple.Maps.iOS = {
 								enabled = 1;
 							};
@@ -203,6 +209,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0757100321541A9700909E8F /* PlaceTourist.swift in Sources */,
+				071B49C9218A25DE0072F109 /* MKMyPointAnnotation.swift in Sources */,
 				07860EAF217A09270091FF93 /* FileSystem.swift in Sources */,
 				075158082153A42C00D3435D /* DetailController.swift in Sources */,
 				075157F82153A00600D3435D /* SecondViewController.swift in Sources */,
