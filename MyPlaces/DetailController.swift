@@ -40,6 +40,13 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
 
     @IBOutlet weak var btnUpdate: UIButton!
     
+    @IBOutlet weak var btnRemove: UIButton!
+    
+    @IBOutlet weak var btnCancel: UIButton!
+    
+    @IBOutlet weak var btnSelectImage: UIButton!
+    
+    
     override func viewDidLoad() {
 
         super.viewDidLoad()
@@ -48,6 +55,50 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
         textDescription.delegate = self
         viewPicker.delegate = self
         viewPicker.dataSource = self
+        
+        // Set background color to screen
+        //TO-DO: use UIViewExtension
+        //self.view.addBackground()
+        self.view.backgroundColor = UIColor.darkGray
+        
+        // Buttons design
+        // TODO: use Extension
+        btnUpdate.backgroundColor = .clear
+        btnUpdate.layer.cornerRadius = 5
+        btnUpdate.layer.borderWidth = 1
+        //btnUpdate.layer.borderColor = UIColor.gray.cgColor
+        btnUpdate.layer.borderColor = UIColor.white.cgColor
+        btnUpdate.widthAnchor.constraint(equalToConstant: 80.0).isActive = true
+        btnUpdate.heightAnchor.constraint(equalToConstant: 32.0).isActive = true
+        
+        btnRemove.backgroundColor = .clear
+        btnRemove.layer.cornerRadius = 5
+        btnRemove.layer.borderWidth = 1
+        btnRemove.layer.borderColor = UIColor.white.cgColor
+        btnRemove.widthAnchor.constraint(equalToConstant: 80.0).isActive = true
+        btnRemove.heightAnchor.constraint(equalToConstant: 32.0).isActive = true
+
+        btnCancel.backgroundColor = .clear
+        btnCancel.layer.cornerRadius = 5
+        btnCancel.layer.borderWidth = 1
+        btnCancel.layer.borderColor = UIColor.white.cgColor
+        btnCancel.widthAnchor.constraint(equalToConstant: 80.0).isActive = true
+        btnCancel.heightAnchor.constraint(equalToConstant: 32.0).isActive = true
+        
+        btnSelectImage.backgroundColor = .clear
+        btnSelectImage.layer.cornerRadius = 5
+        btnSelectImage.layer.borderWidth = 1
+        btnSelectImage.layer.borderColor = UIColor.white.cgColor
+        btnSelectImage.widthAnchor.constraint(equalToConstant: 120.0).isActive = true
+        btnSelectImage.heightAnchor.constraint(equalToConstant: 32.0).isActive = true
+        
+        textDescription.layer.cornerRadius = 5
+        textDescription.layer.borderWidth = 1
+        textDescription.layer.borderColor = UIColor.black.cgColor
+        
+        textName.layer.cornerRadius = 5
+        textName.layer.borderWidth = 1
+        textName.layer.borderColor = UIColor.black.cgColor
         
         if place != nil {
             textName.text = place?.name
@@ -111,7 +162,6 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
     // Remove element from list, except when creating a new element
         if place != nil {
             m_provider.remove(id: place!.id)
-            m_provider.store()
             
             let manager = ManagerPlaces.shared()
             manager.UpdateObservers()
@@ -180,20 +230,27 @@ class DetailController: UIViewController, UIPickerViewDelegate, UIPickerViewData
     // *************** Protocol UIPickerViewDelegate ***************
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
-    // Número de columnes
+    // Number of columns
         return 1
     }
     
     
     func pickerView(_ picker: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-    // Número de files
+    // Number of rows
         return pickerElems1.count
     }
     
     
     func pickerView(_ picker: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-    // Element a retornar per la fila i el component (columna) passats com a argument
+    // Return element based on row and column (component)
         return pickerElems1[row]
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+    // Set color to picker font
+        let attributedString = NSAttributedString(string: pickerElems1[row],
+                                                  attributes: [NSAttributedString.Key.foregroundColor : UIColor.white])
+        return attributedString
     }
     
     // *************************************************************

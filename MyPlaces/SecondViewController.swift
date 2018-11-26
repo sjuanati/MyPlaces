@@ -10,29 +10,40 @@ import UIKit
 import MapKit
 
 // Map controller
-class SecondViewController: UIViewController, MKMapViewDelegate {
+class SecondViewController: UIViewController, MKMapViewDelegate, ManagerPlacesObserver {
 
+    func onPlacesChange() {
+        RemoveMarkers()
+        AddMarkers()
+    }
+    
     let m_provider:ManagerPlaces = ManagerPlaces.shared()
+    let m_location:ManagerLocation = ManagerLocation.shared()
     
     @IBOutlet weak var m_map: MKMapView!
 
     
     override func viewDidLoad() {
+     
         super.viewDidLoad()
-
-        // SJS: testing
-        
         self.m_map?.delegate = self
-        AddMarkers()
         
+        // Add self observer
+        let manager = ManagerPlaces.shared()
+        manager.addObserver(object:self)
+        
+        // Load markers the 1st time
+        AddMarkers()
     }
 
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
 
+    
     func RemoveMarkers() {
-    // Remove all markers or indicators
+    // Remove all markers
        
         let list = self.m_map.annotations.filter { !($0 is MKUserLocation) }
         self.m_map.removeAnnotations(list)
@@ -40,7 +51,7 @@ class SecondViewController: UIViewController, MKMapViewDelegate {
 
     
     func AddMarkers() {
-    // Add markers or indicators from ManagerPlaces
+    // Add all markers from ManagerPlaces
         
         let provider:ManagerPlaces = ManagerPlaces.shared()
         
@@ -55,6 +66,24 @@ class SecondViewController: UIViewController, MKMapViewDelegate {
                                                                      place_id: id)
             self.m_map.addAnnotation(annotation)
         }
+        
+    // Add current user location
+        
+        //TODO PLA4 : get user location and measure distances to stored places
+        /*
+        if provider.GetCount() > 0 {
+            print("user latitude test = \(m_location.userLocation!.coordinate.latitude)")
+            print("user longitude test = \(m_location.userLocation!.coordinate.longitude)")
+            let annotation:MKMyPointAnnotation = MKMyPointAnnotation(coordinate:CLLocationCoordinate2D(latitude: m_location.userLocation!.coordinate.latitude,
+                                   longitude: m_location.userLocation!.coordinate.longitude),
+                                    title: "Your location",
+                                    place_id: "")
+       
+            self.m_map.addAnnotation(annotation)
+            // TODO: Canviar el pin pq el mostri com a posició actual
+        }
+    */
+        
     }
 
     
@@ -80,21 +109,21 @@ class SecondViewController: UIViewController, MKMapViewDelegate {
 
             return pinView
         }
-        print("mapview1")
         return nil
     }
     
+    
     func mapView(_ mapView: MKMapView, annotationView: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-        // Show DetailController's Place when clicking a marker
+        // Show Place details (from DetailController) when clicking a marker
         
         let annotation:MKMyPointAnnotation = annotationView.annotation as! MKMyPointAnnotation
-        let dc:DetailController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "DetailController") as! DetailController
-        let place: Place = m_provider.GetItemById(id: annotation.place_id)
-        dc.place = place
-        present(dc, animated: true, completion: nil)
-        
+        if annotation.title != "Your location" {
+            let dc:DetailController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "DetailController") as! DetailController
+            let place: Place = m_provider.GetItemById(id: annotation.place_id)
+            dc.place = place
+            present(dc, animated: true, completion: nil)
+        }
     }
-    
     
 }
 

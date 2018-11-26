@@ -81,6 +81,7 @@ class ManagerPlaces : Codable {
     // Remove a place by ID
     func remove(id:String) {
         places = places.filter({$0.id != id})
+        store()
     }
 
     

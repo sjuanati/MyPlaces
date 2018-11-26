@@ -43,6 +43,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         manager.store()
  */
  
+        // Change Navigation Bar colors
+        
+        let navigationBarAppearance = UINavigationBar.appearance()
+        navigationBarAppearance.tintColor = UIColor.white
+        navigationBarAppearance.barTintColor = UIColor.darkGray
+        navigationBarAppearance.titleTextAttributes =  [NSAttributedString.Key.foregroundColor: UIColor.white,
+                                                       NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-Light", size: 28)!]
+        
+        let tabBarAppearance = UITabBar.appearance()
+        tabBarAppearance.tintColor = UIColor.white
+        tabBarAppearance.barTintColor = UIColor.darkGray
+        
+        
         return true
     }
     
@@ -67,7 +80,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-
 
 }
 

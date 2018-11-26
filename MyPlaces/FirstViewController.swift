@@ -67,22 +67,52 @@ class FirstViewController: UITableViewController, ManagerPlacesObserver {
         var cell: UITableViewCell
         cell = UITableViewCell()
         let wt: CGFloat = tableView.bounds.size.width
+        //let ht: CGFloat = tableView.bounds.size.height
         
         // Add place name
         var label: UILabel
-        label = UILabel(frame: CGRect(x:10,y:10,width:wt,height:40))
-        let font: UIFont = UIFont(name: "Arial", size: 18)!
+        label = UILabel(frame: CGRect(x:10, y:30, width:wt, height:80))
+        let font: UIFont = UIFont(name: "Arial", size: 24)!
         label.font = font
         label.text = m_provider.GetItemAt(position: indexPath.row).name
         label.sizeToFit()
         cell.contentView.addSubview(label)
         
         // Add place icon
-        let imageIcon: UIImageView = UIImageView(image: UIImage(named:"placeholder.png"))
+        
+        /* PLA 2: Icona per defecte
+        let imageIcon: UIImageView = UIImageView(image: UIImage(named:"Icon - Placeholder.png"))
         imageIcon.frame = CGRect(x:10, y:35, width:25, height:25)
         cell.contentView.addSubview(imageIcon)
+        */
         
+        
+        let imageIcon: UIImageView = UIImageView(image: UIImage(contentsOfFile: m_provider.GetPathImage(p:m_provider.GetItemAt(position: indexPath.row))))
+        imageIcon.frame = CGRect(x:0, y:0, width:wt, height:80)
+        imageIcon.alpha = 0.3
+        cell.contentView.addSubview(imageIcon)
+        
+     
         return cell;
+    }
+ 
+    // Swipe to delete selected element
+    
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if (editingStyle == .delete) {
+
+            let place: Place = self.m_provider.GetItemAt(position: indexPath.row)
+            self.m_provider.remove(id: place.id)
+            
+            // Update Observer
+            let manager = ManagerPlaces.shared()
+            manager.UpdateObservers()
+            
+        }
     }
     
 }
